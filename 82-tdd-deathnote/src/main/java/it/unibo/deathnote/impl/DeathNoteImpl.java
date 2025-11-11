@@ -2,23 +2,32 @@ package it.unibo.deathnote.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.System;
 
 import it.unibo.deathnote.api.DeathNote;
 import it.unibo.deathnote.api.DeathNoteSubject;
 
+/**
+ * Implementation of the interface Deathnote.
+ */
 public class DeathNoteImpl implements DeathNote {
 
-    private final static int DEATH_CAUSE_TIME_LIMIT = 40;
-    private final static int DETAILS_TIME_LIMIT = 6040;
+    private static final int DEATH_CAUSE_TIME_LIMIT = 40;
+    private static final int DETAILS_TIME_LIMIT = 6040;
     private final List<DeathNoteSubject> subjects = new ArrayList<>();
-    private Long time;
+    private Long time = 0L;
+
+    /**
+     * Creates a new instance of {@code DeathNoteImpl}.
+     */
+    public DeathNoteImpl() {
+        //default constructor
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getRule(int ruleNumber) {
+    public String getRule(final int ruleNumber) {
         if (ruleNumber < 1 || ruleNumber > RULES.size()) {
             throw new IllegalArgumentException("Rule index out of range: should be between 1 and " + RULES.size());
         }
@@ -29,9 +38,10 @@ public class DeathNoteImpl implements DeathNote {
      * {@inheritDoc}
      */
     @Override
-    public void writeName(String name) {
+    public void writeName(final String name) {
         if (name == null) { //persone con stesso nome?
-            throw new NullPointerException("The name given was null");
+            throw new NullPointerException("The name given was null"); // NOPMD
+            //the method has to trow this exception in this case
         }
         subjects.add(new DeathNoteSubjectImpl(name));
         this.time = System.currentTimeMillis();
@@ -56,7 +66,7 @@ public class DeathNoteImpl implements DeathNote {
      * {@inheritDoc}
      */
     @Override
-    public boolean writeDetails(String details) {
+    public boolean writeDetails(final String details) {
         if (this.subjects.isEmpty() || details == null) {
             throw new IllegalStateException("There was no name in the book or the specified detail was null");
         }
@@ -71,7 +81,7 @@ public class DeathNoteImpl implements DeathNote {
      * {@inheritDoc}
      */
     @Override
-    public String getDeathCause(String name) {
+    public String getDeathCause(final String name) {
         if (!isNameWritten(name)) {
             throw new IllegalArgumentException("No such name in the book");
         }
@@ -82,7 +92,7 @@ public class DeathNoteImpl implements DeathNote {
      * {@inheritDoc}
      */
     @Override
-    public String getDeathDetails(String name) {
+    public String getDeathDetails(final String name) {
         if (!isNameWritten(name)) {
             throw new IllegalArgumentException("No such name in the book");
         }
@@ -93,8 +103,8 @@ public class DeathNoteImpl implements DeathNote {
      * {@inheritDoc}
      */
     @Override
-    public boolean isNameWritten(String name) {
-        for(final DeathNoteSubject person : subjects) {
+    public boolean isNameWritten(final String name) {
+        for (final DeathNoteSubject person : subjects) {
             if (person.getName().equals(name)) {
                 return true;
             }
