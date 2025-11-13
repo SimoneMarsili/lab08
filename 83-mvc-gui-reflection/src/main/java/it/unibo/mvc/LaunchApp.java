@@ -1,9 +1,13 @@
 package it.unibo.mvc;
 
+import java.lang.reflect.Constructor;
+
 import it.unibo.mvc.api.DrawNumberController;
+import it.unibo.mvc.api.DrawNumberView;
 import it.unibo.mvc.controller.DrawNumberControllerImpl;
 import it.unibo.mvc.model.DrawNumberImpl;
-import it.unibo.mvc.view.DrawNumberSwingView;
+//import it.unibo.mvc.view.DrawNumberStandardOutputView;
+//import it.unibo.mvc.view.DrawNumberSwingView;
 
 /**
  * Application entry-point.
@@ -26,6 +30,24 @@ public final class LaunchApp {
     public static void main(final String... args) {
         final var model = new DrawNumberImpl();
         final DrawNumberController app = new DrawNumberControllerImpl(model);
+        /*
         app.addView(new DrawNumberSwingView());
+        app.addView(new DrawNumberSwingView());
+        app.addView(new DrawNumberStandardOutputView());
+        */
+        String[] guiClasses = {"it.unibo.mvc.view.DrawNumberStandardOutputView", "it.unibo.mvc.view.DrawNumberSwingView"};
+    
+        for (final String className : guiClasses) {
+            try {
+                Class<?> c = Class.forName(className);
+                Constructor<?> constructor = c.getConstructor();
+                for (int i = 0; i < 3; i++) {
+                    app.addView((DrawNumberView)constructor.newInstance());
+                }
+            } catch (final Exception e) {
+                System.out.println(e.getMessage());
+            }
+            
+        }
     }
 }
