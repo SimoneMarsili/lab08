@@ -16,7 +16,7 @@ import java.util.Objects;
 public final class DrawNumberControllerImpl implements DrawNumberController {
 
     private final DrawNumber model;
-    private Collection<DrawNumberView> views;
+    private final Collection<DrawNumberView> views;
 
     /**
      * Builds a new game controller provided a game model.
@@ -46,12 +46,11 @@ public final class DrawNumberControllerImpl implements DrawNumberController {
         if (this.views.isEmpty()) {
             return;
         }
-        DrawResult attempt = model.attempt(n);
+        final DrawResult attempt = model.attempt(n);
         //DrawResult attempt = model.attempt(n);
         for (final DrawNumberView singleView : this.views) {
             Objects.requireNonNull(singleView, "There is no view attached!").result(attempt);
         }
-        
     }
 
     @Override

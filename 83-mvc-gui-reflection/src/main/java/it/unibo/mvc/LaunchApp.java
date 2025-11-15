@@ -1,6 +1,7 @@
 package it.unibo.mvc;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import it.unibo.mvc.api.DrawNumberController;
 import it.unibo.mvc.api.DrawNumberView;
@@ -35,19 +36,19 @@ public final class LaunchApp {
         app.addView(new DrawNumberSwingView());
         app.addView(new DrawNumberStandardOutputView());
         */
-        String[] guiClasses = {"it.unibo.mvc.view.DrawNumberStandardOutputView", "it.unibo.mvc.view.DrawNumberSwingView"};
-    
+        final String[] guiClasses = {"it.unibo.mvc.view.DrawNumberStandardOutputView", "it.unibo.mvc.view.DrawNumberSwingView"};
         for (final String className : guiClasses) {
             try {
-                Class<?> c = Class.forName(className);
-                Constructor<?> constructor = c.getConstructor();
+                final Class<?> c = Class.forName(className);
+                final Constructor<?> constructor = c.getConstructor();
                 for (int i = 0; i < 3; i++) {
-                    app.addView((DrawNumberView)constructor.newInstance());
+                    app.addView((DrawNumberView) constructor.newInstance());
                 }
-            } catch (final Exception e) {
-                System.out.println(e.getMessage());
-            }
-            
+            } catch (final ClassNotFoundException e) {
+                System.out.println("Classe non trovata: " + e.getMessage()); // NOPMD
+            } catch (final ReflectiveOperationException e) {
+                System.out.println(e.getMessage()); // NOPMD
+            } 
         }
     }
 }
